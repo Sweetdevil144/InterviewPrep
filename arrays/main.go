@@ -11,6 +11,65 @@ func main() {
 	fmt.Println(maxSlidingWindow([]int{1, 3, -1, -3, 5, 3, 6, 7}, 3))
 }
 
+func setZeroes(matrix [][]int) {
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return
+	}
+	rows, cols := len(matrix), len(matrix[0])
+	firstRowZero := false
+	firstColZero := false
+
+	for c := 0; c < cols; c++ {
+		if matrix[0][c] == 0 {
+			firstRowZero = true
+			break
+		}
+	}
+	for r := 0; r < rows; r++ {
+		if matrix[r][0] == 0 {
+			firstColZero = true
+			break
+		}
+	}
+
+	for r := 1; r < rows; r++ {
+		for c := 1; c < cols; c++ {
+			if matrix[r][c] == 0 {
+				matrix[0][c] = 0
+				matrix[r][0] = 0
+			}
+		}
+	}
+
+	for i := 1; i < rows; i++ {
+		if matrix[i][0] == 0 {
+			for c := 1; c < cols; c++ {
+				matrix[i][c] = 0
+			}
+		}
+	}
+
+	for j := 1; j < cols; j++ {
+		if matrix[0][j] == 0 {
+			for r := 1; r < rows; r++ {
+				matrix[r][j] = 0
+			}
+		}
+	}
+
+	if firstRowZero {
+		for c := 0; c < cols; c++ {
+			matrix[0][c] = 0
+		}
+	}
+	
+	if firstColZero {
+		for r := 0; r < rows; r++ {
+			matrix[r][0] = 0
+		}
+	}
+}
+
 func maxSlidingWindowDP(nums []int, k int) []int {
 	n := len(nums)
 	leftMax := make([]int, n)
@@ -491,7 +550,7 @@ func trapFirst(height []int) int {
 	res := 0
 	mL := maxLeft(height)
 	mR := maxRight(height)
-	for i, _ := range height {
+	for i := range height {
 		res += min(mL[i], mR[i]) - height[i]
 	}
 	return res

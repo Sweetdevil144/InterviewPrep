@@ -22,17 +22,72 @@ func printListNode(head *ListNode) {
 }
 
 func main() {
+	// Create nodes for the first linked list (number 342)
+	l1 := &ListNode{Val: 2, Next: nil}
+	// l1.Next = &ListNode{Val: 4, Next: nil}
+	// l1.Next.Next = &ListNode{Val: 3, Next: nil}
+	// l1.Next.Next.Next = &ListNode{Val: 9, Next: nil}
 
-	// 1 -> 2 -> 3 -> 4 -> 5 -> 6
-	list := &ListNode{Val: 1}
-	list.Next = &ListNode{Val: 2}
-	list.Next.Next = &ListNode{Val: 3}
-	list.Next.Next.Next = &ListNode{Val: 4}
-	list.Next.Next.Next.Next = &ListNode{Val: 5}
-	list.Next.Next.Next.Next.Next = &ListNode{Val: 6}
-	list.Next.Next.Next.Next.Next.Next = &ListNode{Val: 7}
+	// Create nodes for the second linked list (number 465)
+	l2 := &ListNode{Val: 8, Next: nil}
+	// l2.Next = &ListNode{Val: 6, Next: nil}
+	// l2.Next.Next = &ListNode{Val: 4, Next: nil}
 
-	printListNode(removeNthFromEnd(list, 3))
+	// Call addTwoNumbers function (342 + 465 = 807)
+	result := addTwoNumbers(l1, l2)
+
+	// Print the first number
+	fmt.Print("First number: ")
+	printListNode(l1)
+
+	// Print the second number
+	fmt.Print("Second number: ")
+	printListNode(l2)
+
+	// Print the result
+	fmt.Print("Result: ")
+	printListNode(result)
+}
+
+func findDuplicate(nums []int) int {
+    for _, num := range nums {
+        idx := abs(num) - 1
+        if nums[idx] < 0 {
+            return abs(num)
+        }
+        nums[idx] *= -1
+    }
+    return -1
+}
+
+func abs(num int) int {
+	if num < 0 {
+		return num * -1
+	}
+	return num
+}
+
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	if l1 == nil && l2 == nil {
+		return nil
+	}
+	dummy := &ListNode{}
+	current, carry := dummy, 0
+	for l1 != nil || l2 != nil || carry > 0 {
+		sum := carry
+		if l1 != nil {
+			sum += l1.Val
+			l1 = l1.Next
+		}
+		if l2 != nil {
+			sum += l2.Val
+			l2 = l2.Next
+		}
+		carry = sum / 10
+		current.Next = &ListNode{Val: sum % 10}
+		current = current.Next
+	}
+	return dummy.Next
 }
 
 func removeNthFromEnd(head *ListNode, n int) *ListNode {
