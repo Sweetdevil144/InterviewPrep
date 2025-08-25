@@ -37,8 +37,37 @@ func max(a, b int) int {
 }
 
 func lcs(s, t string) string {
-
-	return ""
+	m, n := len(s), len(t)
+	dp := make([][]int, m+1)
+	for i := range dp {
+		dp[i] = make([]int, n+1)
+	}
+	for i := 1; i <= m; i++ {
+		for j := 1; j <= n; j++ {
+			if s[i-1] == t[j-1] {
+				dp[i][j] = 1 + dp[i-1][j-1]
+			} else {
+				dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+			}
+		}
+	}
+	res := make([]byte, 0, dp[m][n])
+	i, j := m, n
+	for i > 0 && j > 0 {
+		if s[i-1] == t[j-1] {
+			res = append(res, s[i-1])
+			i--
+			j--
+		} else if dp[i-1][j] >= dp[i][j-1] {
+			i--
+		} else {
+			j--
+		}
+	}
+	for l, r := 0, len(res)-1; l < r; l, r = l+1, r-1 {
+		res[l], res[r] = res[r], res[l]
+	}
+	return string(res)
 }
 
 // W can be 10^9. memory allocation problems. Need to make dp independent of W & maxW.

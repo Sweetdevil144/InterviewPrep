@@ -5,7 +5,49 @@ import (
 )
 
 func main() {
-	fmt.Println(longestPalindrome("xabacy"))
+	fmt.Println(numDecodings("1126")) // (1,1,2,6) ; (11, 2, 6) ; (1,1,26) ; (1,12,6) ; (11,26)
+}
+
+func numDecodings(s string) int {
+	var dfs func(curr string, index int, dp map[int]int) int
+	dfs = func(s string, i int, dp map[int]int) int {
+		if val, ok := dp[i]; ok {
+			return val
+		}
+		if i == len(s) {
+			return 1
+		}
+		if s[i] == '0' {
+			return 0
+		}
+		res := dfs(s, i+1, dp)
+		if i+1 < len(s) && (s[i] == '1' ||
+		   (s[i] == '2' && s[i+1] <= '6')) {
+			res += dfs(s, i+2, dp)
+		}
+		dp[i] = res
+		return res
+	}
+	return dfs(s, 0, map[int]int{len(s): 1})
+}
+
+func countSubstrings(s string) int {
+	l, count := len(s), len(s)
+	for i := 0; i < l; i++ {
+		a, b := i-1, i+1
+		for a > -1 && b < l && s[a] == s[b] {
+			count++
+			a--
+			b++
+		}
+		a, b = i, i+1
+		for a > -1 && b < l && s[a] == s[b] {
+			count++
+			a--
+			b++
+		}
+	}
+	return count
 }
 
 func longestPalindrome(s string) string {
