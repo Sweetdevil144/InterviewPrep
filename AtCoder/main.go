@@ -1,18 +1,19 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 )
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-	s := scanner.Text()
-	scanner.Scan()
-	t := scanner.Text()
-	fmt.Println(lcs(s, t))
+	var n int
+	fmt.Scan(&n)
+	sum := n * (n + 1) / 2
+	var x int
+	for i := 1; i < n; i++ {
+		fmt.Scan(&x)
+		sum -= x
+	}
+	fmt.Println(sum)
 }
 
 func abs(num int) int {

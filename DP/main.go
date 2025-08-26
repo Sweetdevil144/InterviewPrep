@@ -2,10 +2,36 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 func main() {
-	fmt.Println(numDecodings("1126")) // (1,1,2,6) ; (11, 2, 6) ; (1,1,26) ; (1,12,6) ; (11,26)
+	fmt.Println(coinChange([]int{2, 3, 7}, 11))
+}
+
+func coinChange(coins []int, amount int) int {
+	if amount == 0 {
+		return 0
+	}
+	var dfs func(amount int) int
+	dfs = func(amount int) int {
+		if amount == 0 {
+			return 0
+		}
+		res := math.MaxInt32
+        for _, coin := range coins {
+            if amount - coin >= 0 {
+                res = min(res, 1 + dfs(amount - coin))
+            }
+        }
+
+        return res
+	}
+	res := dfs(amount)
+	if res >= math.MaxInt32  {
+		return -1
+	}
+	return res
 }
 
 func numDecodings(s string) int {
@@ -22,7 +48,7 @@ func numDecodings(s string) int {
 		}
 		res := dfs(s, i+1, dp)
 		if i+1 < len(s) && (s[i] == '1' ||
-		   (s[i] == '2' && s[i+1] <= '6')) {
+			(s[i] == '2' && s[i+1] <= '6')) {
 			res += dfs(s, i+2, dp)
 		}
 		dp[i] = res
